@@ -24,6 +24,7 @@ from ultralytics.nn.modules import (
     SPP,
     SPPELAN,
     SPPF,
+    WFU,
     A2C2f,
     AConv,
     ADown,
@@ -68,7 +69,6 @@ from ultralytics.nn.modules import (
     YOLOEDetect,
     YOLOESegment,
     v10Detect,
-    WFU,
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, LOGGER, YAML, colorstr, emojis
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -1446,10 +1446,8 @@ def torch_safe_load(weight, safe_only=False):
     return ckpt, file
 
 
-
 def attempt_load_weights(weights, device=None, inplace=True, fuse=False):
     """Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a."""
-
     ensemble = Ensemble()
     for w in weights if isinstance(weights, list) else [weights]:
         ckpt, w = torch_safe_load(w)  # load ckpt
@@ -1636,7 +1634,7 @@ def parse_model(d, ch, verbose=True):
                 c2 = [ch[j] for j in f]
             else:
                 c2 = [ch[f]]
-            args = [c2] + args
+            args = [c2, *args]
             module = torch.nn.Sequential(*(m(*args) for _ in range(n))) if n > 1 else m(*args)
             t = str(m)[8:-2].replace("__main__.", "")
             module.np = sum(x.numel() for x in module.parameters())

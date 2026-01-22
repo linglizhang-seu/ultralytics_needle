@@ -1,6 +1,7 @@
+import sys
 
 import torch
-import sys
+
 from ultralytics import YOLO
 
 print(f"Python version: {sys.version}")
@@ -19,7 +20,7 @@ try:
     model = YOLO("yolo11n.pt")
     # Just check if we can pass device='1'
     print("Attempting to train for 1 epoch on device='1'...")
-    model.train(data="coco8.yaml", epochs=1, imgsz=64, device="1") 
+    model.train(data="coco8.yaml", epochs=1, imgsz=64, device="1")
     print("Train completed successfully on device='1'")
 except Exception as e:
     print(f"\nERROR during YOLO execution: {e}")
