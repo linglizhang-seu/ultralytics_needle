@@ -119,5 +119,3 @@ model.export(format="onnx", imgsz=224, opset=13, dynamic=False, simplify=False, 
 # cv2.imshow("ONNX Segmentation Result", img_vis)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
-
-
