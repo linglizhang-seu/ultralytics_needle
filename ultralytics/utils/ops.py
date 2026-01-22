@@ -148,6 +148,7 @@ def make_divisible(x: int, divisor):
         divisor = int(divisor.max())  # to int
     return math.ceil(x / divisor) * divisor
 
+
 def non_max_suppression(
     prediction,
     conf_thres=0.25,
@@ -164,24 +165,22 @@ def non_max_suppression(
     in_place=True,
     rotated=False,
 ):
-    """
-    Perform non-maximum suppression (NMS) on a set of boxes, with support for masks and multiple labels per box.
+    """Perform non-maximum suppression (NMS) on a set of boxes, with support for masks and multiple labels per box.
 
     Args:
-        prediction (torch.Tensor): A tensor of shape (batch_size, num_classes + 4 + num_masks, num_boxes)
-            containing the predicted boxes, classes, and masks. The tensor should be in the format
-            output by a model, such as YOLO.
-        conf_thres (float): The confidence threshold below which boxes will be filtered out.
-            Valid values are between 0.0 and 1.0.
-        iou_thres (float): The IoU threshold below which boxes will be filtered out during NMS.
-            Valid values are between 0.0 and 1.0.
+        prediction (torch.Tensor): A tensor of shape (batch_size, num_classes + 4 + num_masks, num_boxes) containing the
+            predicted boxes, classes, and masks. The tensor should be in the format output by a model, such as YOLO.
+        conf_thres (float): The confidence threshold below which boxes will be filtered out. Valid values are between
+            0.0 and 1.0.
+        iou_thres (float): The IoU threshold below which boxes will be filtered out during NMS. Valid values are between
+            0.0 and 1.0.
         classes (List[int]): A list of class indices to consider. If None, all classes will be considered.
-        agnostic (bool): If True, the model is agnostic to the number of classes, and all
-            classes will be considered as one.
+        agnostic (bool): If True, the model is agnostic to the number of classes, and all classes will be considered as
+            one.
         multi_label (bool): If True, each box may have multiple labels.
-        labels (List[List[Union[int, float, torch.Tensor]]]): A list of lists, where each inner
-            list contains the apriori labels for a given image. The list should be in the format
-            output by a dataloader, with each label being a tuple of (class_index, x1, y1, x2, y2).
+        labels (List[List[Union[int, float, torch.Tensor]]]): A list of lists, where each inner list contains the
+            apriori labels for a given image. The list should be in the format output by a dataloader, with each label
+            being a tuple of (class_index, x1, y1, x2, y2).
         max_det (int): The maximum number of boxes to keep after NMS.
         nc (int, optional): The number of classes output by the model. Any indices after this will be considered masks.
         max_time_img (float): The maximum time (seconds) for processing one image.
@@ -191,9 +190,8 @@ def non_max_suppression(
         rotated (bool): If Oriented Bounding Boxes (OBB) are being passed for NMS.
 
     Returns:
-        (List[torch.Tensor]): A list of length batch_size, where each element is a tensor of
-            shape (num_boxes, 6 + num_masks) containing the kept boxes, with columns
-            (x1, y1, x2, y2, confidence, class, mask1, mask2, ...).
+        (List[torch.Tensor]): A list of length batch_size, where each element is a tensor of shape (num_boxes, 6 +
+            num_masks) containing the kept boxes, with columns (x1, y1, x2, y2, confidence, class, mask1, mask2, ...).
     """
     import torchvision  # scope for faster 'import ultralytics'
 
@@ -302,9 +300,8 @@ def non_max_suppression(
 
 
 def xywh2xyxy(x):
-    """
-    Convert bounding box coordinates from (x, y, width, height) format to (x1, y1, x2, y2) format where (x1, y1) is the
-    top-left corner and (x2, y2) is the bottom-right corner. Note: ops per 2 channels faster than per channel.
+    """Convert bounding box coordinates from (x, y, width, height) format to (x1, y1, x2, y2) format where (x1, y1) is
+    the top-left corner and (x2, y2) is the bottom-right corner. Note: ops per 2 channels faster than per channel.
 
     Args:
         x (np.ndarray | torch.Tensor): The input bounding box coordinates in (x, y, width, height) format.
