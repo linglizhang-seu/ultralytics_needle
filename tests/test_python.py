@@ -11,12 +11,12 @@ import numpy as np
 import pytest
 import torch
 from PIL import Image
+from ultralytics.data.build import load_inference_source
+from ultralytics.data.utils import check_det_dataset
 
 from tests import CFG, MODEL, MODELS, SOURCE, SOURCES_LIST, TASK_MODEL_DATA
 from ultralytics import RTDETR, YOLO
 from ultralytics.cfg import TASK2DATA, TASKS
-from ultralytics.data.build import load_inference_source
-from ultralytics.data.utils import check_det_dataset
 from ultralytics.utils import (
     ARM64,
     ASSETS,
@@ -326,6 +326,7 @@ def test_data_utils(tmp_path):
     """Test utility functions in ultralytics/data/utils.py, including dataset stats and auto-splitting."""
     from ultralytics.data.split import autosplit
     from ultralytics.data.utils import HUBDatasetStats
+
     from ultralytics.utils.downloads import zip_directory
 
     # from ultralytics.utils.files import WorkingDirectory
