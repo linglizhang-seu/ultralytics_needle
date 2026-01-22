@@ -25,6 +25,7 @@ __all__ = (
     "SPP",
     "SPPELAN",
     "SPPF",
+    "WFU",
     "AConv",
     "ADown",
     "Attention",
@@ -52,7 +53,6 @@ __all__ = (
     "ResNetLayer",
     "SCDown",
     "TorchVision",
-    "WFU"
 )
 
 
@@ -1945,19 +1945,20 @@ class SAVPE(nn.Module):
 
         return F.normalize(aggregated.transpose(-2, -3).reshape(B, Q, -1), dim=-1, p=2)
 
+
 class HaarWavelet(nn.Module):
     def __init__(self, in_channels, grad=False):
-        super(HaarWavelet, self).__init__()
+        super().__init__()
         self.in_channels = in_channels
 
         self.haar_weights = torch.ones(4, 1, 2, 2)
-        #h
+        # h
         self.haar_weights[1, 0, 0, 1] = -1
         self.haar_weights[1, 0, 1, 1] = -1
-        #v
+        # v
         self.haar_weights[2, 0, 1, 0] = -1
         self.haar_weights[2, 0, 1, 1] = -1
-        #d
+        # d
         self.haar_weights[3, 0, 1, 0] = -1
         self.haar_weights[3, 0, 0, 1] = -1
 
@@ -1976,11 +1977,12 @@ class HaarWavelet(nn.Module):
             out = x.reshape([x.shape[0], 4, self.in_channels, x.shape[2], x.shape[3]])
             out = torch.transpose(out, 1, 2)
             out = out.reshape([x.shape[0], self.in_channels * 4, x.shape[2], x.shape[3]])
-            return F.conv_transpose2d(out, self.haar_weights, bias=None, stride=2, groups = self.in_channels)
+            return F.conv_transpose2d(out, self.haar_weights, bias=None, stride=2, groups=self.in_channels)
+
 
 class WFU(nn.Module):
     def __init__(self, chn):
-        super(WFU, self).__init__()
+        super().__init__()
         dim_big, dim_small = chn
         self.dim = dim_big
         self.HaarWavelet = HaarWavelet(dim_big, grad=False)
@@ -1995,8 +1997,8 @@ class WFU(nn.Module):
         self.channel_tranformation = nn.Sequential(
             # nn.Conv2d(dim_big+dim_small, dim_big+dim_small // 1, kernel_size=1, padding=0),
             # nn.ReLU(),
-            Conv(dim_big+dim_small, dim_big+dim_small // 1, 1),
-            nn.Conv2d(dim_big+dim_small // 1, dim_big*3, kernel_size=1, padding=0),
+            Conv(dim_big + dim_small, dim_big + dim_small // 1, 1),
+            nn.Conv2d(dim_big + dim_small // 1, dim_big * 3, kernel_size=1, padding=0),
         )
 
     def forward(self, x):
@@ -2004,11 +2006,10 @@ class WFU(nn.Module):
         haar = self.HaarWavelet(x_big, rev=False)
         a = haar.narrow(1, 0, self.dim)
         h = haar.narrow(1, self.dim, self.dim)
-        v = haar.narrow(1, self.dim*2, self.dim) 
-        d = haar.narrow(1, self.dim*3, self.dim)
+        v = haar.narrow(1, self.dim * 2, self.dim)
+        d = haar.narrow(1, self.dim * 3, self.dim)
 
         hvd = self.RB(h + v + d)
         a_ = self.channel_tranformation(torch.cat([x_small, a], dim=1))
         out = self.InverseHaarWavelet(torch.cat([hvd, a_], dim=1), rev=True)
         return out
-

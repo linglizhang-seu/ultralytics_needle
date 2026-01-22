@@ -580,7 +580,7 @@ def init_seeds(seed=0, deterministic=False):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)  
+    torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.benchmark = False
     # for Multi-GPU, exception safe
     # torch.backends.cudnn.benchmark = True  # AutoBatch problem https://github.com/ultralytics/yolov5/issues/9287
