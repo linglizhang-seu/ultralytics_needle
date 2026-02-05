@@ -17,7 +17,7 @@ operations; however:
   change any API.  Since it is assumed that repository filtering is
   something one would do very rarely, and in particular that it's a
   one-shot operation, this should not be a problem in practice for anyone.
-  However, if you want to re-use a program you have written that uses
+  However, if you want to reuse a program you have written that uses
   git-filter-repo as a library (or makes use of one of its --*-callback
   arguments), you should either make sure you are using the same version of
   git and git-filter-repo, or make sure to re-test it.
@@ -234,7 +234,7 @@ class AncestryGraph(object):
     # added to the AncestryGraph
     self.cur_value = 0
 
-    # A mapping from the external identifers given to us to the simple integers
+    # A mapping from the external identifiers given to us to the simple integers
     # we use in self.graph
     self.value = {}
 
@@ -380,7 +380,7 @@ class MailmapInfo(object):
       count = 0
       for line in f:
         count += 1
-        err = "Unparseable mailmap file: line #{} is bad: {}".format(count, line)
+        err = "Unparsable mailmap file: line #{} is bad: {}".format(count, line)
         # Remove comments
         line = comment_re.sub(b'', line)
         # Remove leading and trailing whitespace
@@ -1046,8 +1046,8 @@ class FastExportParser(object):
     self._parent_regexes = {}
     parent_regex_rules = (br' :(\d+)\n$', br' ([0-9a-f]{40})\n')
     for parent_refname in (b'from', b'merge'):
-      ans = [re.compile(parent_refname+x) for x in parent_regex_rules]
-      self._parent_regexes[parent_refname] = ans
+      and = [re.compile(parent_refname+x) for x in parent_regex_rules]
+      self._parent_regexes[parent_refname] = and
     self._quoted_string_re = re.compile(br'"(?:[^"\\]|\\.)*"')
     self._refline_regexes = {}
     for refline_name in (b'reset', b'commit', b'tag', b'progress'):
@@ -1332,7 +1332,7 @@ class FastExportParser(object):
     if orig_parents == [None]:
       orig_parents = []
 
-    # fast-import format is kinda stupid in that it allows implicit parents
+    # fast-import format is kind of stupid in that it allows implicit parents
     # based on the branch name instead of requiring them to be specified by
     # 'from' directives.  The only way to get no parent is by using a reset
     # directive first, which clears the latest_commit_for_this_branch tracking.
@@ -1455,7 +1455,7 @@ class FastExportParser(object):
     # Create the progress message
     progress = Progress(message)
 
-    # Call any user callback to allow them to modify the progress messsage
+    # Call any user callback to allow them to modify the progress message
     if self._progress_callback:
       self._progress_callback(progress)
 
@@ -2050,7 +2050,7 @@ EXAMPLES
                "length as the old reference).  Use this flag to turn off "
                "updating commit hashes in commit messages."))
     messages.add_argument('--preserve-commit-encoding', action='store_true',
-        help=_("Do not reencode commit messages into UTF-8.  By default, if "
+        help=_("Do not re-encode commit messages into UTF-8.  By default, if "
                "the commit object specifies an encoding for the commit "
                "message, the message is re-encoded into UTF-8."))
 
@@ -2160,7 +2160,7 @@ EXAMPLES
         help=_("By default, --sensitive-data-removal will trigger a "
                "mirror-like fetch of all refs from origin, discarding local "
                "changes, but ensuring that _all_ fetchable refs that hold on "
-               "to the sensitve data are rewritten.  This flag removes that "
+               "to the sensitive data are rewritten.  This flag removes that "
                "fetch, risking that other refs continue holding on to the "
                "sensitive data.  This option is implied by --partial or any "
                "flag that implies --partial."))
@@ -3186,7 +3186,7 @@ class RepoFilter(object):
     self._commit_renames = {}
 
     # A set of original_ids (i.e. original hashes) for which we have not yet
-    # gotten the new hashses; the value is always the corresponding fast-export
+    # gotten the new hashes; the value is always the corresponding fast-export
     # id (i.e. commit.id)
     self._pending_renames = collections.OrderedDict()
 
@@ -3371,7 +3371,7 @@ class RepoFilter(object):
     self._lfs_object_tracker = LFSObjectTracker(self._file_info_value,
                                                 check_sources,
                                                 check_targets)
-    self._parser._lfs_object_tracker = self._lfs_object_tracker # kinda gross
+    self._parser._lfs_object_tracker = self._lfs_object_tracker # kind of gross
 
     # Get initial objects
     if self._already_ran:
@@ -4348,8 +4348,8 @@ class RepoFilter(object):
         extra_flags.extend([b'--export-marks='+source_marks_file,
                             b'--import-marks='+source_marks_file])
       if self._args.preserve_commit_encoding is not None: # pragma: no cover
-        reencode = 'no' if self._args.preserve_commit_encoding else 'yes'
-        extra_flags.append('--reencode='+reencode)
+        re-encode = 'no' if self._args.preserve_commit_encoding else 'yes'
+        extra_flags.append('--re-encode='+re-encode)
       if self._args.date_order:
         extra_flags.append('--date-order')
       location = ['-C', self._args.source] if self._args.source else []
@@ -4442,7 +4442,7 @@ class RepoFilter(object):
                "\n            ".join([decode(x) for x in refs_to_warn_about]) +
                "\n" +
                "         We want to forcibly fetch from upstream to ensure\n" +
-               "         that all relevent refs are rewritten, but this will\n" +
+               "         that all relevant refs are rewritten, but this will\n" +
                "         discard your local changes before starting the\n" +
                "         rewrite.  Proceed with fetch (Y/N)?")
         response = input(msg)
