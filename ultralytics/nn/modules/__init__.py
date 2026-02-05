@@ -30,6 +30,7 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
+    WFU,
     A2C2f,
     AConv,
     ADown,
@@ -59,7 +60,6 @@ from .block import (
     ResNetLayer,
     SCDown,
     TorchVision,
-    WFU,
 )
 from .conv import (
     CBAM,
@@ -120,6 +120,7 @@ __all__ = (
     "SPP",
     "SPPELAN",
     "SPPF",
+    "WFU",
     "A2C2f",
     "AConv",
     "ADown",
@@ -135,7 +136,6 @@ __all__ = (
     "C3k2",
     "C3x",
     "CBFuse",
-    "WFU",
     "CBLinear",
     "ChannelAttention",
     "Classify",
