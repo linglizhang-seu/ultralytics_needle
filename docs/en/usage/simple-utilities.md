@@ -218,7 +218,6 @@ Convert a single polygon (as a list) to a binary mask of the specified image siz
 
 ```python
 import numpy as np
-
 from ultralytics.data.utils import polygon2mask
 
 imgsz = (1080, 810)
