@@ -1,13 +1,15 @@
 import json
 import random
+
 try:
     import yaml
 except ImportError:
     yaml = None
 import argparse
 import shutil
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
+
 from tqdm import tqdm
 
 # Set random seed for reproducibility
@@ -19,9 +21,11 @@ image_formats = ["jpg", "jpeg", "png", "bmp", "webp", "tif", "dng", "mpo", "pfm"
 # 要跳过的标签（不写入 YOLO，也视为“空”）
 SKIP_LABELS = {"contour", "needle_body"}
 
+
 def normalize_label(label: str) -> str:
     # 目前不做合并，直接返回原标签
     return label
+
 
 def copy_labled_img(json_path: Path, target_folder: Path, task: str):
     # Iterate through supported image formats and copy image files
@@ -35,7 +39,7 @@ def copy_labled_img(json_path: Path, target_folder: Path, task: str):
 
 
 def json_to_yolo(json_path: Path, sorted_keys: list):
-    with open(json_path, "r", encoding="utf-8") as f:
+    with open(json_path, encoding="utf-8") as f:
         labelme_data = json.load(f)
 
     width = labelme_data.get("imageWidth", 1)
@@ -55,20 +59,22 @@ def json_to_yolo(json_path: Path, sorted_keys: list):
 
         points = shape.get("points", [])
         class_idx = sorted_keys.index(label)
-        txt_string = "{} ".format(class_idx)
+        txt_string = f"{class_idx} "
 
         for x, y in points:
             # 防止除以零
             x = float(x) / max(1.0, float(width))
             y = float(y) / max(1.0, float(height))
-            txt_string += "{} {} ".format(x, y)
+            txt_string += f"{x} {y} "
 
         yolo_lines.append(txt_string.strip() + "\n")
 
     return yolo_lines
 
+
 def create_directory_if_not_exists(directory_path):
     directory_path.mkdir(parents=True, exist_ok=True)
+
 
 # Create a YAML file for YOLO training
 def create_yaml(output_folder: Path, sorted_keys: list):
@@ -106,12 +112,13 @@ def create_yaml(output_folder: Path, sorted_keys: list):
             for idx, name in names_dict.items():
                 yaml_file.write(f"  {idx}: {name}\n")
 
+
 def get_labels_and_json_path(input_folder: Path):
     json_file_paths = list(input_folder.rglob("*.json"))
     label_counts = defaultdict(int)
 
     for json_file_path in json_file_paths:
-        with open(json_file_path, "r", encoding="utf-8") as f:
+        with open(json_file_path, encoding="utf-8") as f:
             labelme_data = json.load(f)
         for shape in labelme_data.get("shapes", []):
             raw_label = shape.get("label", "")
@@ -130,7 +137,7 @@ def delete_empty_labels(json_file_paths: list, output_folder: Path):
     empty_label_files = []
 
     for json_file_path in json_file_paths:
-        with open(json_file_path, "r", encoding="utf-8") as f:
+        with open(json_file_path, encoding="utf-8") as f:
             labelme_data = json.load(f)
 
         # 只保留非跳过标签的 shapes

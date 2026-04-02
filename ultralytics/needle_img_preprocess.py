@@ -1,14 +1,9 @@
 import os
-import os
-from pathlib import Path
-from PIL import Image
-import argparse
 import shutil
+from pathlib import Path
+
 # python
-import os
-import shutil
-from pathlib import Path
-import argparse
+
 
 def safe_copy(src: Path, dst_dir: Path, overwrite: bool = False) -> Path:
     dst_dir.mkdir(parents=True, exist_ok=True)
@@ -27,6 +22,7 @@ def safe_copy(src: Path, dst_dir: Path, overwrite: bool = False) -> Path:
         shutil.copy2(src, dst)
         return dst
 
+
 def copy_tif_and_json(input_dir: Path, output_dir: Path, overwrite: bool = False, preserve_structure: bool = False):
     input_dir = Path(input_dir).resolve()
     output_dir = Path(output_dir).resolve()
@@ -35,14 +31,14 @@ def copy_tif_and_json(input_dir: Path, output_dir: Path, overwrite: bool = False
     for root, _, files in os.walk(input_dir):
         root_path = Path(root)
         for fname in files:
-            if fname.lower().endswith(('.tif', '.tiff')):
+            if fname.lower().endswith((".tif", ".tiff")):
                 tif_path = root_path / fname
-                json_path = tif_path.with_suffix('.json')
+                json_path = tif_path.with_suffix(".json")
                 # 仅当同名 json 存在时才拷贝
                 if not json_path.exists():
                     print(f"Skip (no json): {tif_path}")
                     continue
-                rel_dir = root_path.relative_to(input_dir) if preserve_structure else Path('.')
+                rel_dir = root_path.relative_to(input_dir) if preserve_structure else Path(".")
                 dst_dir = output_dir / rel_dir
                 try:
                     copied_tif = safe_copy(tif_path, dst_dir, overwrite=overwrite)
@@ -50,7 +46,6 @@ def copy_tif_and_json(input_dir: Path, output_dir: Path, overwrite: bool = False
                     print(f"Copied: {tif_path} -> {copied_tif}; {json_path} -> {copied_json}")
                 except Exception as e:
                     print(f"Failed: {tif_path} ({e})")
-
 
 
 def collect_files_flat(input_dir: Path, output_dir: Path, overwrite: bool = False):
@@ -89,8 +84,9 @@ def collect_files_flat(input_dir: Path, output_dir: Path, overwrite: bool = Fals
             except Exception as e:
                 print(f"Failed: {src} ({e})")
 
-if __name__ == '__main__':
-    input_path=r'D:\result_low_conf'
-    output_path=r'D:\\needle_json_2026_0119_version'
+
+if __name__ == "__main__":
+    input_path = r"D:\result_low_conf"
+    output_path = r"D:\\needle_json_2026_0119_version"
     # collect_files_flat(input_path, output_path, overwrite=False)
     copy_tif_and_json(input_path, output_path)

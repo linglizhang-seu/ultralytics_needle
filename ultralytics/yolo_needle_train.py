@@ -1,10 +1,10 @@
-
-import onnx
-import cv2
-import albumentations as A
-from ultralytics import YOLO
 import torch
+
+from ultralytics import YOLO
+
 torch.cuda.empty_cache()
+
+
 def main():
     # weight_path = (r"E:\models\lightly_train\out\my_experiment_512\exported_last.pt")
     # weight_path = r"E:\Human_Projects\yolov11\ultralytics-main\ultralytics\yolo11s-seg.pt" # 建议尝试 s 或 m 模型以提升精度
@@ -12,34 +12,34 @@ def main():
 
     # model = YOLO(r"E:/Human_Projects/yolov11/ultralytics-main/ultralytics/cfg/models/11/yolo11-seg-wfu.yaml").load \
     #     (weight_path)
-    model = YOLO(r"E:/Human_Projects/yolov11/ultralytics-main/ultralytics/cfg/models/11/yolo11-seg.yaml").load \
-        (weight_path)
+    model = YOLO(r"E:/Human_Projects/yolov11/ultralytics-main/ultralytics/cfg/models/11/yolo11-seg.yaml").load(
+        weight_path
+    )
     model.train(
-        data="ultralytics/datasets/yolo.yaml",     # 你的分类数据集路径
+        data="ultralytics/datasets/yolo.yaml",  # 你的分类数据集路径
         epochs=400,
         patience=100,
         imgsz=1024,
         device="1",
         workers=0,
         # ==== 基础数据增强 ====
-        degrees=180.0,      # 旋转范围 (+/- 180度)
-        translate=0.1,      # 平移
-        scale=0.5,          # 缩放 (默认0.5)
-        hsv_h=0.015,        # 色调增强 (默认 0.015)
-        hsv_s=0.7,          # 饱和度增强 (默认 0.7)
-        hsv_v=0.4,          # 亮度/明度增强 (默认 0.4) - 对应强度/对比度调整
-        flipud=0.5,         # 上下翻转概率
-        fliplr=0.5,         # 左右翻转概率
-        mosaic=1.0,         # 马赛克增强 (开启，提升小目标及复杂背景鲁棒性)
-        mixup=0.1,          # Mixup (减少一点，避免过度混淆)
-        copy_paste=0.5,     # CopyPaste (仅分割有效) 增加复制粘贴概率，制造更多遮挡和实例
-        auto_augment="randaugment", # 自动增强策略
-        erasing=0.4,        # 随机擦除，模拟遮挡
+        degrees=180.0,  # 旋转范围 (+/- 180度)
+        translate=0.1,  # 平移
+        scale=0.5,  # 缩放 (默认0.5)
+        hsv_h=0.015,  # 色调增强 (默认 0.015)
+        hsv_s=0.7,  # 饱和度增强 (默认 0.7)
+        hsv_v=0.4,  # 亮度/明度增强 (默认 0.4) - 对应强度/对比度调整
+        flipud=0.5,  # 上下翻转概率
+        fliplr=0.5,  # 左右翻转概率
+        mosaic=1.0,  # 马赛克增强 (开启，提升小目标及复杂背景鲁棒性)
+        mixup=0.1,  # Mixup (减少一点，避免过度混淆)
+        copy_paste=0.5,  # CopyPaste (仅分割有效) 增加复制粘贴概率，制造更多遮挡和实例
+        auto_augment="randaugment",  # 自动增强策略
+        erasing=0.4,  # 随机擦除，模拟遮挡
         crop_fraction=1.0,  # 保持原图比例
-
     )
 
-    results=model.val(data="ultralytics/datasets/yolo.yaml")
+    results = model.val(data="ultralytics/datasets/yolo.yaml")
 
     print("F1 score:", results.box.f1)
     # print("F1 score curve:", results.box.f1_curve)
@@ -62,13 +62,9 @@ def main():
     model.export(format="onnx")
 
 
-
-
-
 if __name__ == "__main__":
     print(torch.cuda.is_available())
     print(torch.cuda.current_device())
     print(torch.cuda.get_device_name(0))
     print(torch.cuda.get_device_name(1))
     main()
-
